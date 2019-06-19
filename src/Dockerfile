@@ -29,11 +29,10 @@ RUN apt-get update \
 
 RUN git config --global url.https://github.com/.insteadOf git://github.com/ \
  && cd /root \
- && git clone https://github.com/gambit/gambit \
+ && git clone https://github.com/gambit/gambit.git \
  && cd /root/gambit \
  && git fetch -a \
  && git checkout v${GAMBIT_VERSION} \
- && cd /root/gambit \
  && ./configure \
         --prefix=/usr/local/gambit \
         --enable-single-host \
