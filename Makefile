@@ -70,6 +70,7 @@ build-%:
 	docker build --build-arg BUILD_DATE=$(BUILD_DATE) \
 		--build-arg ARCH=$(shell make translate-$(ARCH);) \
 		--build-arg BASE=$(BUILD_IMAGE_NAME):$(ARCH) \
+		--build-arg GAMBIT_VERSION=$(GAMBIT_VERSION) \
 		--build-arg VCS_REF=$(VCS_REF) \
 		--build-arg VCS_URL=$(VCS_URL) \
 		-t $(IMAGE_NAME):$(ARCH) src
