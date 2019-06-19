@@ -55,20 +55,10 @@ wrap-%:
 build:
 	$(foreach ARCH, $(TARGET_ARCHITECTURES), make build-$(ARCH);)
 
-
-translate-%: # translate our architecture mappings to s6's
-	@if [[ "$*" == "arm32v7" ]] ; then \
-	   echo "armhf"; \
-	elif [[ "$*" == "arm64v8" ]] ; then \
-	   echo "aarch64"; \
-	else \
-		echo $*; \
-	fi 
-
 build-%:
 	$(eval ARCH := $*)
 	docker build --build-arg BUILD_DATE=$(BUILD_DATE) \
-		--build-arg ARCH=$(shell make translate-$(ARCH);) \
+		--build-arg ARCH=$(ARCH) \
 		--build-arg BASE=$(BUILD_IMAGE_NAME):$(ARCH) \
 		--build-arg GAMBIT_VERSION=$(GAMBIT_VERSION) \
 		--build-arg VCS_REF=$(VCS_REF) \
