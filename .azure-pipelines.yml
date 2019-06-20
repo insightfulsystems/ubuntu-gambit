@@ -37,7 +37,7 @@ stages:
       password: $(DOCKER_PASSWORD)
 
 
-- stage: manifest
+- stage: Manifest
   displayName: multi-arch manifest
   dependsOn: 
     - amd64
@@ -52,7 +52,7 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
         - script: |
-            make setup-manifest
             echo $(DOCKER_PASSWORD) | $(DOCKER) login --username $(DOCKER_USERNAME) --password-stdin
+            make setup-manifest
             make build-manifest
             make push-manifest
