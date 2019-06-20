@@ -46,6 +46,6 @@ stages:
     steps:
         - script: |
             make setup-manifest
-            $(DOCKER) login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
+            $(DOCKER) login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
             make build-manifest
             make push-manifest
