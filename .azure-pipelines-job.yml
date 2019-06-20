@@ -12,8 +12,6 @@
     variables:
       ARCH: ${{ parameters.arch }} 
       DOCKER: docker --config=~/.docker
-      DOCKER_USERNAME: $(DOCKER_USERNAME)
-      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
     steps:
         - script: |
             make qemu
