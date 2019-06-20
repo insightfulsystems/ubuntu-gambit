@@ -5,7 +5,7 @@ trigger:
 
 stages:
 - stage: amd64
-  displayName: amd64 (Intel/AMD64)
+  displayName: amd64 (Intel/AMD)
   dependsOn: [] 
   jobs:
   - template: .azure-pipelines-job.yml 
@@ -36,7 +36,7 @@ stages:
       username: $(DOCKER_USERNAME)
       password: $(DOCKER_PASSWORD)
 
-      
+
 - stage: manifest
   displayName: multi-arch manifest
   dependsOn: 
