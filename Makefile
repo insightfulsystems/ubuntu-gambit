@@ -67,11 +67,11 @@ build-%:
 	@echo "--- Done building $(ARCH) ---"
 
 push:
-	docker push $(IMAGE_NAME)
+	docker --config=~/.config push $(IMAGE_NAME)
 
 push-%:
 	$(eval ARCH := $*)
-	docker push $(IMAGE_NAME):$(ARCH)
+	docker --config=~/config push $(IMAGE_NAME):$(ARCH)
 
 expand-%: # expand architecture variants for manifest
 	@if [ "$*" == "amd64" ] ; then \
