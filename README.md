@@ -4,7 +4,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/insightful/ubuntu-gambit.svg)](https://hub.docker.com/r/insightful/ubuntu-gambit)
 [![](https://images.microbadger.com/badges/image/insightful/ubuntu-gambit.svg)](https://microbadger.com/images/insightful/ubuntu-gambit "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/insightful/ubuntu-gambit.svg)](https://microbadger.com/images/insightful/ubuntu-gambit "Get your own version badge on microbadger.com")
-[![Build Status](https://travis-ci.org/insightfulsystems/ubuntu-gambit.svg?branch=master)](https://travis-ci.org/insightfulsystems/ubuntu-gambit)
+[![Build Status](https://dev.azure.com/ruicarmo/insightfulsystems/_apis/build/status/insightfulsystems.ubuntu-gambit?branchName=master)](https://dev.azure.com/ruicarmo/insightfulsystems/_build/latest?definitionId=4&branchName=master)
 
 An `ubuntu` base image for [Gambit Scheme][gambit], with:
 
