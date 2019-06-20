@@ -32,6 +32,7 @@ fetch-qemu-%:
 		https://github.com/multiarch/qemu-user-static/releases/download/v$(QEMU_VERSION)/qemu-$(ARCH)-static.tar.gz && \
 	tar xzf qemu-$(ARCH)-static.tar.gz && \
 	cp qemu-$(ARCH)-static ../qemu/
+	@echo "--> Done."
 
 wrap:
 	@echo "==> Building local base containers"

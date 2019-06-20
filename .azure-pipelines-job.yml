@@ -9,15 +9,20 @@
     timeoutInMinutes: ${{ parameters.timeout }}
     pool:
         vmImage: ${{ parameters.vmImage }}
+    variables:
+      ARCH: ${{ parameters.arch }} 
+      DOCKER: docker --config=~/.docker
+      DOCKER_USERNAME: $(DOCKER_USERNAME)
+      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
     steps:
         - script: |
             make qemu
-            make wrap-${{ variables.ARCH }}
+            make wrap-$(ARCH)
           displayName: setup ${{ parameters.name }}
         - script: |
-            make build-${{ variables.ARCH }}
+            make build-$(ARCH)
           displayName: build ${{ parameters.name }}
         - script: |
-            ${{ variables.DOCKER }} login -u ${{ variables.DOCKER_USERNAME }} -p ${{ variables.DOCKER_PASSWORD}}
-            make push-${{ variables.arch }}
+            $(DOCKER) login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            make push-$(ARCH)
           displayName: push ${{ parameters.name }}

@@ -7,38 +7,28 @@ stages:
 - stage: amd64
   displayName: amd64 (Intel/AMD64)
   dependsOn: [] 
-  variables:
-    - name: DOCKER
-      value: docker --config=~/.docker
-    - name: ARCH
-      value: amd64
   jobs:
   - template: .azure-pipelines-job.yml 
+    parameters:
+      arch: amd64
 
 
 - stage: arm32v7
   displayName: arm32v7 (Pi 2+ and other armhf)
   dependsOn: []
-  variables:
-    - name: DOCKER
-      value: docker --config=~/.docker
-    - name: ARCH
-      value: arm32v7 
   jobs:
   - template: .azure-pipelines-job.yml
+    parameters:
+      arch: arm32v7
 
 
 - stage: arm64v8
   displayName: arm64v8 (Pi 3+ and other ARM64)
   dependsOn: []
-  variables:
-    - name: DOCKER
-      value: docker --config=~/.docker
-    - name: ARCH
-      value: arm64v8
   jobs:
   - template: .azure-pipelines-job.yml
-
+    parameters:
+      arch: arm64v8
 
 - stage: manifest
   displayName: multi-arch manifest
