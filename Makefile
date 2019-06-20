@@ -46,18 +46,21 @@ wrap-translate-%:
 
 wrap-%:
 	$(eval ARCH := $*)
+	@echo "--> Building local base container for $(ARCH)"
 	$(DOCKER) build --build-arg BUILD_DATE=$(BUILD_DATE) \
 		--build-arg ARCH=$(shell make wrap-translate-$(ARCH)) \
 		--build-arg BASE=$(ARCH)/$(UBUNTU_VERSION) \
 		--build-arg VCS_REF=$(VCS_REF) \
 		--build-arg VCS_URL=$(VCS_URL) \
 		-t $(BUILD_IMAGE_NAME):$(ARCH) qemu
+	@echo "--> Done building local base container for $(ARCH)"
 
 build:
 	$(foreach ARCH, $(TARGET_ARCHITECTURES), make build-$(ARCH);)
 
 build-%:
 	$(eval ARCH := $*)
+	@echo "--> Building $(ARCH)"
 	$(DOCKER) build --build-arg BUILD_DATE=$(BUILD_DATE) \
 		--build-arg ARCH=$(ARCH) \
 		--build-arg BASE=$(BUILD_IMAGE_NAME):$(ARCH) \
@@ -65,7 +68,7 @@ build-%:
 		--build-arg VCS_REF=$(VCS_REF) \
 		--build-arg VCS_URL=$(VCS_URL) \
 		-t $(IMAGE_NAME):$(ARCH) src
-	@echo "--- Done building $(ARCH) ---"
+	@echo "--> Done building $(ARCH)"
 
 push:
 	$(DOCKER) push $(IMAGE_NAME)
