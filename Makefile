@@ -105,8 +105,8 @@ setup-manifest:
 		mkdir -p $(DOCKER_CONFIG) && \
 		echo '{ "experimental": "enabled" }' > $(DOCKER_CONFIG)/config.json ; \
 	fi \
-	if [[ "$(OSTYPE)" == "linux-gnu" ]]; then \
-		echo '{ "experimental": true }' | sudo tee /etc/docker/daemon.json \
+	if [[ "$(OSTYPE)" == "linux-gnu" ]] ; then \
+		echo '{ "experimental": true }' | sudo tee /etc/docker/daemon.json && \
 		sudo service docker restart \
 	fi
 
