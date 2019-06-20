@@ -1,11 +1,10 @@
   parameters:
-    name: ''  # defaults for any parameters that aren't specified
     vmImage: 'ubuntu-latest'
     timeout: 60
  
   jobs:
-  - job: ${{ parameters.name }}
-    displayName: build ${{ parameters.name }}
+  - job: ${{ parameters.arch }}
+    displayName: build ${{ parameters.arch }}
     timeoutInMinutes: ${{ parameters.timeout }}
     pool:
         vmImage: ${{ parameters.vmImage }}
@@ -16,11 +15,11 @@
         - script: |
             make qemu
             make wrap-$(ARCH)
-          displayName: setup ${{ parameters.name }}
+          displayName: setup ${{ parameters.arch }}
         - script: |
             make build-$(ARCH)
-          displayName: build ${{ parameters.name }}
-        - script: |
+          displayName: build ${{ parameters.arch }}
+        - bash: |
             $(DOCKER) login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
             make push-$(ARCH)
-          displayName: push ${{ parameters.name }}
+          displayName: push ${{ parameters.arch }}
