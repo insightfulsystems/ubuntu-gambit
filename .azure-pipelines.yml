@@ -33,7 +33,7 @@ stages:
   dependsOn: []
   variables:
     - name: DOCKER
-      value: 
+      value: docker --config=~/.docker
     - name: ARCH
       value: arm64v8
   jobs:
