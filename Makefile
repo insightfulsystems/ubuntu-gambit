@@ -18,12 +18,15 @@ export SHELL=/bin/bash
 .PHONY: build qemu wrap push manifest clean
 
 qemu:
+	@echo "==> Setting up QEMU"
 	-$(DOCKER) run --rm --privileged multiarch/qemu-user-static:register --reset
-	-mkdir tmp 
-		$(foreach ARCH, $(QEMU_ARCHITECTURES), make fetch-qemu-$(ARCH);)
+	-mkdir tmp
+	$(foreach ARCH, $(QEMU_ARCHITECTURES), make fetch-qemu-$(ARCH);)
+	@echo "==> Done setting up QEMU"
 
 fetch-qemu-%:
 	$(eval ARCH := $*)
+	@echo "--> Fetching QEMU binary for $(ARCH)"
 	cd tmp && \
 	curl -L -o qemu-$(ARCH)-static.tar.gz \
 		https://github.com/multiarch/qemu-user-static/releases/download/v$(QEMU_VERSION)/qemu-$(ARCH)-static.tar.gz && \
@@ -31,7 +34,9 @@ fetch-qemu-%:
 	cp qemu-$(ARCH)-static ../qemu/
 
 wrap:
+	@echo "==> Building local base containers"
 	$(foreach ARCH, $(TARGET_ARCHITECTURES), make wrap-$(ARCH);)
+	@echo "==> Done."
 
 wrap-amd64:
 	$(DOCKER) pull amd64/$(UBUNTU_VERSION)
@@ -56,7 +61,9 @@ wrap-%:
 	@echo "--> Done building local base container for $(ARCH)"
 
 build:
+	@echo "==> Building all containers"
 	$(foreach ARCH, $(TARGET_ARCHITECTURES), make build-$(ARCH);)
+	@echo "==> Done."
 
 build-%:
 	$(eval ARCH := $*)
