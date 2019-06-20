@@ -2,7 +2,8 @@
     name: ''  # defaults for any parameters that aren't specified
     vmImage: 'ubuntu-latest'
     timeout: 60
-  
+ 
+  jobs:
   - job: ${{ parameters.name }}
     displayName: build ${{ parameters.name }}
     timeoutInMinutes: ${{ parameters.timeout }}
