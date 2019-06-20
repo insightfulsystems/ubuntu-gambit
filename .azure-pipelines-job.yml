@@ -7,10 +7,9 @@
     displayName: build ${{ parameters.arch }}
     timeoutInMinutes: ${{ parameters.timeout }}
     pool:
-        vmImage: ${{ parameters.vmImage }}
+      vmImage: ${{ parameters.vmImage }}
     variables:
       ARCH: ${{ parameters.arch }} 
-      DOCKER: docker --config=~/.docker
     steps:
         - script: |
             make qemu
@@ -20,6 +19,5 @@
             make build-$(ARCH)
           displayName: build ${{ parameters.arch }}
         - script: |
-            echo "$DOCKER_PASSWORD" | $(DOCKER) login --username $DOCKER_USERNAME --password-stdin
             make push-$(ARCH)
           displayName: push ${{ parameters.arch }}
