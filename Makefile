@@ -79,7 +79,9 @@ build-%:
 	@echo "--> Done building $(ARCH)"
 
 push:
+	@echo "==> Pushing $(IMAGE_NAME)"
 	$(DOCKER) push $(IMAGE_NAME)
+	@echo "==> Done."
 
 push-%:
 	$(eval ARCH := $*)
@@ -92,12 +94,22 @@ expand-%: # expand architecture variants for manifest
 	   echo '--arch arm --variant $*' | cut -c 1-21,27-; \
 	fi
 
+manifest:
+	@echo "==> Building multi-architecture manifest"
+	$(foreach STEP, setup build push, make $(STEP)-manifest;)
+	@echo "==> Done."	
+
 setup-manifest:
 	$(eval DOCKER_CONFIG := $(shell echo "$(DOCKER)" | cut -f 2 -d=))
 	@if [ ! -f "$(DOCKER_CONFIG)/config.json" ] ; then \
 		mkdir -p $(DOCKER_CONFIG) && \
 		echo '{ "experimental": "enabled" }' > $(DOCKER_CONFIG)/config.json ; \
+	fi \
+	if [[ "$(OSTYPE)" == "linux-gnu" ]]; then \
+		echo '{ "experimental": true }' | sudo tee /etc/docker/daemon.json \
+		sudo service docker restart \
 	fi
+
 
 build-manifest:
 	$(DOCKER) manifest create --amend \
@@ -112,7 +124,9 @@ push-manifest:
 	$(DOCKER) manifest push $(IMAGE_NAME):latest
 
 clean:
+	@echo "==> Cleaning up old images..."
 	-$(DOCKER) rm -fv $$($(DOCKER) ps -a -q -f status=exited)
 	-$(DOCKER) rmi -f $$($(DOCKER) images -q -f dangling=true)
 	-$(DOCKER) rmi -f $(BUILD_IMAGE_NAME)
 	-$(DOCKER) rmi -f $$($(DOCKER) images --format '{{.Repository}}:{{.Tag}}' | grep $(IMAGE_NAME))
+	@echo "==> Done."
