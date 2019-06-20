@@ -7,13 +7,7 @@ stages:
 - stage: amd64
   displayName: amd64 (Intel/AMD64)
   dependsOn: [] 
-  variables:
-    DOCKER: docker --config=~/.docker
   jobs:
-  - job: Login
-    steps:
-      - script: |
-          echo "$DOCKER_PASSWORD" | $(DOCKER) login --username $DOCKER_USERNAME --password-stdin
   - template: .azure-pipelines-job.yml 
     parameters:
       arch: amd64
@@ -22,13 +16,7 @@ stages:
 - stage: arm32v7
   displayName: arm32v7 (Pi 2+ and other armhf)
   dependsOn: []
-  variables:
-    DOCKER: docker --config=~/.docker
   jobs:
-  - job: Login
-    steps:
-      - script: |
-          echo "$DOCKER_PASSWORD" | $(DOCKER) login --username $DOCKER_USERNAME --password-stdin
   - template: .azure-pipelines-job.yml
     parameters:
       arch: arm32v7
@@ -37,13 +25,7 @@ stages:
 - stage: arm64v8
   displayName: arm64v8 (Pi 3+ and other ARM64)
   dependsOn: []
-  variables:
-    DOCKER: docker --config=~/.docker
   jobs:
-  - job: Login
-    steps:
-      - script: |
-          echo "$DOCKER_PASSWORD" | $(DOCKER) login --username $DOCKER_USERNAME --password-stdin
   - template: .azure-pipelines-job.yml
     parameters:
       arch: arm64v8
@@ -55,18 +37,15 @@ stages:
     - arm32v7
     - arm64v8
   variables:
-    DOCKER: docker --config=~/.docker
+    - name: DOCKER
+      value: docker --config=~/.docker
   jobs:
-  - job: Login
-    steps:
-      - script: |
-          echo "$DOCKER_PASSWORD" | $(DOCKER) login --username $DOCKER_USERNAME --password-stdin
   - job: Manifest 
     pool:
       vmImage: 'ubuntu-latest'
     steps:
         - script: |
             make setup-manifest
-            echo "$DOCKER_PASSWORD" | $(DOCKER) login --username $DOCKER_USERNAME --password-stdin
+            echo $(DOCKER_PASSWORD) | $(DOCKER) login --username $(DOCKER_USERNAME) --password-stdin
             make build-manifest
             make push-manifest

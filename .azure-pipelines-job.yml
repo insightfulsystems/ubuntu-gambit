@@ -10,6 +10,7 @@
       vmImage: ${{ parameters.vmImage }}
     variables:
       ARCH: ${{ parameters.arch }} 
+      DOCKER: docker --config=~/.docker
     steps:
         - script: |
             make qemu
@@ -19,5 +20,6 @@
             make build-$(ARCH)
           displayName: build ${{ parameters.arch }}
         - script: |
+            echo ${{ variables.DOCKER_PASSWORD }} | $(DOCKER) login --username ${{ variables.DOCKER_USERNAME }}--password-stdin
             make push-$(ARCH)
           displayName: push ${{ parameters.arch }}
