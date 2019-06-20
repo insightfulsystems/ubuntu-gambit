@@ -13,23 +13,7 @@ stages:
     - name: ARCH
       value: amd64
   jobs:
-  - job: 
-    displayName: build and push image
-    timeoutInMinutes: 120
-    pool:
-        vmImage: 'ubuntu-latest'
-    steps:
-        - script: |
-            make qemu
-            make wrap-$(ARCH)
-          displayName: setup
-        - script: |
-            make build-$(ARCH)
-          displayName: build $(ARCH)
-        - script: |
-            $(DOCKER) login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
-            make push-$(ARCH)
-          displayName: push image for $(ARCH)
+  - template: .azure-pipelines-job.yml 
 
 
 - stage: arm32v7
@@ -41,50 +25,20 @@ stages:
     - name: ARCH
       value: arm32v7 
   jobs:
-  - job: 
-    displayName: build and push image
-    timeoutInMinutes: 480
-    pool:
-        vmImage: 'ubuntu-latest'
-    steps:
-        - script: |
-            make qemu
-            make wrap-$(ARCH)
-          displayName: setup
-        - script: |
-            make build-$(ARCH)
-          displayName: build $(ARCH)
-        - script: |
-            $(DOCKER) login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
-            make push-$(ARCH)
-          displayName: push image for $(ARCH)
+  - template: .azure-pipelines-job.yml
+
 
 - stage: arm64v8
   displayName: arm64v8 (Pi 3+ and other ARM64)
   dependsOn: []
   variables:
     - name: DOCKER
-      value: docker --config=~/.docker
+      value: 
     - name: ARCH
       value: arm64v8
   jobs:
-  - job: 
-    displayName: build and push image
-    timeoutInMinutes: 480
-    pool:
-        vmImage: 'ubuntu-latest'
-    steps:
-        - script: |
-            make qemu
-            make wrap-$(ARCH)
-          displayName: setup
-        - script: |
-            make build-$(ARCH)
-          displayName: build $(ARCH)
-        - script: |
-            $(DOCKER) login -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
-            make push-$(ARCH)
-          displayName: push image for $(ARCH)
+  - template: .azure-pipelines-job.yml
+
 
 - stage: manifest
   displayName: multi-arch manifest
