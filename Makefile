@@ -81,14 +81,23 @@ expand-%: # expand architecture variants for manifest
 	   echo '--arch arm --variant $*' | cut -c 1-21,27-; \
 	fi
 
-manifest:
+setup-manifest:
+	$(eval DOCKER_CONFIG := $(shell echo "$(DOCKER)" | cut -f 2 -d=))
+	@if [ ! -f "$(DOCKER_CONFIG)/config.json" ] ; then \
+		mkdir -p $(DOCKER_CONFIG) && \
+		echo '{ "experimental": "enabled" }' > $(DOCKER_CONFIG)/config.json ; \
+	fi
+
+build-manifest:
 	$(DOCKER) manifest create --amend \
 		$(IMAGE_NAME):latest \
-		$(foreach ARCH, $(TARGET_ARCHITECTURES), $(IMAGE_NAME):$(ARCH) )
-	$(foreach ARCH, $(TARGET_ARCHITECTURES), \
+		$(foreach arch, $(TARGET_ARCHITECTURES), $(IMAGE_NAME):$(NODE_MAJOR_VERSION)-$(arch) )
+	$(foreach arch, $(TARGET_ARCHITECTURES), \
 		$(DOCKER) manifest annotate \
 			$(IMAGE_NAME):latest \
-			$(IMAGE_NAME):$(ARCH) $(shell make expand-$(ARCH));)
+			$(IMAGE_NAME):$(NODE_MAJOR_VERSION)-$(arch) $(shell make expand-$(arch));)
+
+push-manifest:
 	$(DOCKER) manifest push $(IMAGE_NAME):latest
 
 clean:
