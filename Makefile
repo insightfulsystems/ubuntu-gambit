@@ -9,7 +9,7 @@ export QEMU_VERSION=4.0.0-2
 export BUILD_IMAGE_NAME=local/ubuntu-base
 export TARGET_ARCHITECTURES=amd64 arm64v8 arm32v7
 export QEMU_ARCHITECTURES=arm aarch64
-export DOCKER=docker --config=~/.docker
+export DOCKER?=docker --config=~/.docker
 export SHELL=/bin/bash
 
 # Permanent local overrides
