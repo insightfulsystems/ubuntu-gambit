@@ -101,17 +101,18 @@ manifest:
 
 setup-manifest:
 	$(eval DOCKER_CONFIG := $(shell echo "$(DOCKER)" | cut -f 2 -d=))
-	if [[ ! -f "$(DOCKER_CONFIG)/config.json" ]] ; then \
+	@if [[ ! -f "$(DOCKER_CONFIG)/config.json" ]] ; then \
 		mkdir -p $(DOCKER_CONFIG) && \
 		echo '{ "experimental": "enabled" }' > $(DOCKER_CONFIG)/config.json ; \
 	fi
-	if [[ "$$OSTYPE" == "linux-gnu" ]] ; then \
-		echo '{ "experimental": true }' | sudo tee /etc/docker/daemon.json && \
+	@if [[ "$$OSTYPE" == "linux-gnu" ]] ; then \
+		echo '{ "experimental": true }' | sudo tee /etc/docker/daemon.json ; \
 		sudo service docker restart ; \
 	fi
 
 
 build-manifest:
+	cat "$(DOCKER_CONFIG)/config.json"
 	$(DOCKER) manifest create --amend \
 		$(IMAGE_NAME):latest \
 		$(foreach arch, $(TARGET_ARCHITECTURES), $(IMAGE_NAME):$(NODE_MAJOR_VERSION)-$(arch) )

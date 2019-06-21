@@ -4,7 +4,7 @@
  
   jobs:
   - job: ${{ parameters.arch }}
-    displayName: build ${{ parameters.arch }}
+    displayName: Build ${{ parameters.arch }}
     timeoutInMinutes: ${{ parameters.timeout }}
     pool:
       vmImage: ${{ parameters.vmImage }}
@@ -15,11 +15,11 @@
         - script: |
             make qemu
             make wrap-$(ARCH)
-          displayName: setup ${{ parameters.arch }}
+          displayName: Setup ${{ parameters.arch }}
         - script: |
             make build-$(ARCH)
-          displayName: build ${{ parameters.arch }}
+          displayName: Build ${{ parameters.arch }}
         - script: |
             echo ${{ parameters.password }} | $(DOCKER) login --username ${{ parameters.username }} --password-stdin
             make push-$(ARCH)
-          displayName: push ${{ parameters.arch }}
+          displayName: Push ${{ parameters.arch }}
