@@ -113,7 +113,7 @@ setup-manifest:
 
 build-manifest:
 	$(eval DOCKER_CONFIG := $(shell echo "$(DOCKER)" | cut -f 2 -d=))
-	cat "$(DOCKER_CONFIG)/.config.json"
+	cat "$(DOCKER_CONFIG)/config.json"
 	$(DOCKER) manifest create --amend \
 		$(IMAGE_NAME):latest \
 		$(foreach arch, $(TARGET_ARCHITECTURES), $(IMAGE_NAME):$(NODE_MAJOR_VERSION)-$(arch) )
