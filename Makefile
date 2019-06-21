@@ -104,9 +104,9 @@ setup-manifest:
 	@if [[ ! -f "$(DOCKER_CONFIG)/config.json" ]] ; then \
 		mkdir -p $(DOCKER_CONFIG) && \
 		echo '{ "experimental": "enabled" }' > $(DOCKER_CONFIG)/config.json ; \
-	else
-		cat $(DOCKER_CONFIG)/config.json | jq .experimental="enabled" > $(DOCKER_CONFIG)/config.json ;
-	fi	
+	else \
+		cat $(DOCKER_CONFIG)/config.json | jq .experimental="enabled" > $(DOCKER_CONFIG)/config.json ; \
+	fi
 	@if [[ "$$OSTYPE" == "linux-gnu" ]] ; then \
 		echo '{ "experimental": true }' | sudo tee /etc/docker/daemon.json ; \
 		sudo service docker restart ; \
