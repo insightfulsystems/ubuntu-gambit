@@ -37,7 +37,7 @@ stages:
       password: $(DOCKER_PASSWORD)
 
 
-- stage: manifest
+- stage: Manifest
   displayName: multi-arch manifest
   dependsOn: 
     - amd64
