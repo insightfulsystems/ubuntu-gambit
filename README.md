@@ -10,4 +10,6 @@ An `ubuntu` base image for [Gambit Scheme][gambit], with:
 
 * Support for `amd64`, `arm32v7` and `arm64v8` architectures
 
+This is used as a base image for [`insightful/ubuntu-gerbil`](https://github.com/insightfulsystems/ubuntu-gerbil), and triggers updated builds for it.
+
 [gambit]: http://gambitscheme.org/
