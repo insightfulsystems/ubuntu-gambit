@@ -73,6 +73,7 @@ build-%:
 	$(DOCKER) build --build-arg BUILD_DATE=$(BUILD_DATE) \
 		--build-arg ARCH=$(ARCH) \
 		--build-arg BASE=$(BUILD_IMAGE_NAME):$(ARCH) \
+		--build-arg GAMBIT_VERSION=$(GAMBIT_VERSION):$(ARCH) \
 		--build-arg VCS_REF=$(VCS_REF) \
 		--build-arg VCS_URL=$(VCS_URL) \
 		-t $(IMAGE_NAME):$(ARCH) src
