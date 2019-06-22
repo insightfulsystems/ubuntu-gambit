@@ -12,6 +12,10 @@ export QEMU_ARCHITECTURES=arm aarch64
 export DOCKER?=docker --config=~/.docker
 export SHELL=/bin/bash
 
+export DOCKER?=docker --config=~/.docker
+export DOCKER_CLI_EXPERIMENTAL=enabled
+export SHELL=/bin/bash
+
 # Permanent local overrides
 -include .env
 
@@ -72,7 +76,6 @@ build-%:
 	$(DOCKER) build --build-arg BUILD_DATE=$(BUILD_DATE) \
 		--build-arg ARCH=$(ARCH) \
 		--build-arg BASE=$(BUILD_IMAGE_NAME):$(ARCH) \
-		--build-arg GAMBIT_VERSION=$(GAMBIT_VERSION) \
 		--build-arg VCS_REF=$(VCS_REF) \
 		--build-arg VCS_URL=$(VCS_URL) \
 		-t $(IMAGE_NAME):$(ARCH) src
@@ -96,33 +99,23 @@ expand-%: # expand architecture variants for manifest
 
 manifest:
 	@echo "==> Building multi-architecture manifest"
-	$(foreach STEP, setup build push, make $(STEP)-manifest;)
+	$(foreach STEP, build push, make $(STEP)-manifest;)
 	@echo "==> Done."	
 
-setup-manifest:
-	$(eval DOCKER_CONFIG_DIR := $(shell echo "$(DOCKER)" | cut -f 2 -d=))
-	if [[ ! -f "$(DOCKER_CONFIG_DIR)/config.json" ]] ; then \
-		mkdir -p $(DOCKER_CONFIG_DIR) && \
-		echo '{ "experimental": "enabled" }' > $(DOCKER_CONFIG_DIR)/config.json ; \
-	else \
-		cat $(DOCKER_CONFIG_DIR)/config.json | jq .experimental="enabled" > $(DOCKER_CONFIG_DIR)/config.json ; \
-	fi
-	if [[ "$$OSTYPE" == "linux-gnu" ]] ; then \
-		echo '{ "experimental": true }' | sudo tee /etc/docker/daemon.json ; \
-		sudo service docker restart ; \
-	fi
-
-
 build-manifest:
+	@echo "--> Creating manifest"
+	$(eval DOCKER_CONFIG := $(shell echo "$(DOCKER)" | cut -f 2 -d=)/config.json)
+	cat $(DOCKER_CONFIG) | grep -v auth
 	$(DOCKER) manifest create --amend \
 		$(IMAGE_NAME):latest \
-		$(foreach arch, $(TARGET_ARCHITECTURES), $(IMAGE_NAME):$(NODE_MAJOR_VERSION)-$(arch) )
+		$(foreach arch, $(TARGET_ARCHITECTURES), $(IMAGE_NAME):$(arch) )
 	$(foreach arch, $(TARGET_ARCHITECTURES), \
 		$(DOCKER) manifest annotate \
 			$(IMAGE_NAME):latest \
-			$(IMAGE_NAME):$(NODE_MAJOR_VERSION)-$(arch) $(shell make expand-$(arch));)
+			$(IMAGE_NAME):$(arch) $(shell make expand-$(arch));)
 
 push-manifest:
+	@echo "--> Pushing manifest"
 	$(DOCKER) manifest push $(IMAGE_NAME):latest
 
 clean:
