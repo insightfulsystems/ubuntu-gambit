@@ -100,22 +100,20 @@ manifest:
 	@echo "==> Done."	
 
 setup-manifest:
-	$(eval DOCKER_CONFIG := $(shell echo "$(DOCKER)" | cut -f 2 -d=))
-	@if [[ ! -f "$(DOCKER_CONFIG)/config.json" ]] ; then \
-		mkdir -p $(DOCKER_CONFIG) && \
-		echo '{ "experimental": "enabled" }' > $(DOCKER_CONFIG)/config.json ; \
+	$(eval DOCKER_CONFIG_DIR := $(shell echo "$(DOCKER)" | cut -f 2 -d=))
+	if [[ ! -f "$(DOCKER_CONFIG_DIR)/config.json" ]] ; then \
+		mkdir -p $(DOCKER_CONFIG_DIR) && \
+		echo '{ "experimental": "enabled" }' > $(DOCKER_CONFIG_DIR)/config.json ; \
 	else \
-		cat $(DOCKER_CONFIG)/config.json | jq .experimental="enabled" > $(DOCKER_CONFIG)/config.json ; \
+		cat $(DOCKER_CONFIG_DIR)/config.json | jq .experimental="enabled" > $(DOCKER_CONFIG_DIR)/config.json ; \
 	fi
-	@if [[ "$$OSTYPE" == "linux-gnu" ]] ; then \
+	if [[ "$$OSTYPE" == "linux-gnu" ]] ; then \
 		echo '{ "experimental": true }' | sudo tee /etc/docker/daemon.json ; \
 		sudo service docker restart ; \
 	fi
 
 
 build-manifest:
-	$(eval DOCKER_CONFIG := $(shell echo "$(DOCKER)" | cut -f 2 -d=))
-	cat "$(DOCKER_CONFIG)/config.json"
 	$(DOCKER) manifest create --amend \
 		$(IMAGE_NAME):latest \
 		$(foreach arch, $(TARGET_ARCHITECTURES), $(IMAGE_NAME):$(NODE_MAJOR_VERSION)-$(arch) )
